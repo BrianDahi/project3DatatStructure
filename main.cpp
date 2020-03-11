@@ -82,8 +82,13 @@ void GLRow<DT>::setDown(int d){
 }
 template<class DT>
 void GLRow<DT>::setInfo(DT& x){
-    info = x;
+    info = &x;
     
+}
+template <class DT>
+ostream& operator <<  (ostream& s,  GLRow<DT>& oneGLRow) {
+    s <<"not done yet in GLRow";
+    return s;
 }
 template <class DT>
 GLRow<DT>::~GLRow() {
@@ -202,6 +207,11 @@ public:
     void ArrayGLL<DT>::setFirstElement(int pos){
     
     }
+template <class DT>
+ostream& operator <<  (ostream& s, ArrayGLL<DT>& OneGLL) {
+    s <<"not done yet in ArrayGLL";
+    return s;
+}
     template <class DT>
     ArrayGLL<DT>::~ArrayGLL() {
         delete[] myGLL;
