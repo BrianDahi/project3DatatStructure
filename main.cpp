@@ -18,9 +18,9 @@ template<class DT>
 class GLRow{
     friend ostream& operator << <DT>(ostream& s, GLRow<DT>& oneGLRow);
 protected:
-    DT* _info;
-    int _Next;
-    int _Down;
+    DT* info;
+    int Next;
+    int Down;
     
 public:
     GLRow();
@@ -30,23 +30,29 @@ public:
     int getNext();
     int getDown();
     DT& getInfo();
-    int setNext(int n);
-    int setDown(int d);
-    int setInfo(DT& x);
+    void setNext(int n);
+    void setDown(int d);
+    void setInfo(DT& x);
     ~GLRow();//destructor
     
 };
 template<class DT>
 GLRow<DT>::GLRow(){
-    
+    info = NULL;
+    Next = 0;
+    Down = 0;
 }
 template<class DT>
 GLRow<DT>::GLRow(DT& newInfo){
-    
+    info = new DT(newInfo);
+    Next = 0;
+    Down = 0;
 }
 template<class DT>
-GLRow<DT>::GLRow(GLRow<DT>& anotherOne){
-    
+GLRow<DT>::GLRow(GLRow<DT>& copyGLRow){
+    info = copyGLRow.info;
+    Next = copyGLRow.Next;
+    Down = copyGLRow.Down;
 }
 template<class DT>
 GLRow<DT> GLRow<DT>::operator =(GLRow& anotherOne){
@@ -54,30 +60,30 @@ GLRow<DT> GLRow<DT>::operator =(GLRow& anotherOne){
 }
 template<class DT>
 int GLRow<DT>::getNext(){
-    return 0;
+    return Next;
 }
 template<class DT>
 int GLRow<DT>::getDown(){
-    return 0;
+    return Down;
 }
 template<class DT>
 DT& GLRow<DT>::getInfo(){
+    return info;
+}
+template<class DT>
+void GLRow<DT>::setNext(int n){
+    Next = n;
+   
+}
+template<class DT>
+void GLRow<DT>::setDown(int d){
+    Down = d;
     
 }
 template<class DT>
-int GLRow<DT>::setNext(int n){
-   // int n = n;
-    return n;
-}
-template<class DT>
-int GLRow<DT>::setDown(int d){
-  //  int a = d;
-    return d;
-}
-template<class DT>
-int GLRow<DT>::setInfo(DT& x){
-  //  int x = x;
-    return x;
+void GLRow<DT>::setInfo(DT& x){
+    info = x;
+    
 }
 template <class DT>
 GLRow<DT>::~GLRow() {
@@ -114,71 +120,106 @@ public:
     void setFirstElement(int pos);
    ~ArrayGLL();//destructor
 };
-template<class DT>
-ArrayGLL<DT>::ArrayGLL(){
+    template<class DT>
+    ArrayGLL<DT>::ArrayGLL(){//default constructor
+        myGLL = NULL;
+        firstElement = 0;
+        firstFree = 0;
+    }
+    template<class DT>
+    ArrayGLL<DT>::ArrayGLL(int size){
+        myGLL = new GLRow<DT> [int(size)];
+        maxSize = size;
+        firstElement = 0;
+        firstFree = 0;
+    }
+    template<class DT>
+    ArrayGLL<DT>::ArrayGLL (ArrayGLL<DT>& anotherOne){
     
-}
-template<class DT>
-ArrayGLL<DT>::ArrayGLL(int size){
+        maxSize = anotherOne.maxSize;
+        myGLL = anotherOne.myGLL;
+        firstElement = anotherOne.firstElement;
+        firstFree = anotherOne.firstFree;
+    }
+
+    template<class DT>
+    ArrayGLL<DT>& ArrayGLL<DT>::operator =(ArrayGLL<DT>& anotherOne){
+        this-> anotherOne;
+    }
+
+    template<class DT>
+    void ArrayGLL<DT>::display(){// bonus
     
-}
-template<class DT>
-ArrayGLL<DT>::ArrayGLL (ArrayGLL<DT>& anotherOne){
+    }
+    template<class DT>
+    int ArrayGLL<DT>::find(DT& key){
+        /*This method will use recurison to find the key and return the index
+         if not o found return -1**/
+        return key;
+    }
+    template<class DT>
+    int ArrayGLL<DT>::findDisplayPath(DT& key){
+        return key;
+    }
+    template<class DT>
+    int ArrayGLL<DT>:: noFree(){
+        int counter = 0;
+       
+        /*Think of this as a linked list so**/
+        return counter;
+    }
+    template<class DT>
+    int ArrayGLL<DT>::size(){
     
-}
-template<class DT>
-ArrayGLL<DT>& ArrayGLL<DT>::operator =(ArrayGLL<DT>& anotherOne){
+        return maxSize;
+    }
+    template<class DT>
+    int ArrayGLL<DT>::parentPos(DT& key){//bonus
+        return 0;
+    }
+    template<class DT>
+    GLRow<DT>& ArrayGLL<DT>:: operator[](int pos){
+        
+        if ((pos < 0) || (pos >= size()))
+            cout<< "Array is out of bounds"<<endl;
+            
+        return myGLL[pos];
+    }
+
+    template<class DT>
+    int ArrayGLL<DT>::getFirstFree(){
+        return 0;
+    }
+    template<class DT>
+    int ArrayGLL<DT>::getFirstElement(){
+        return 0;
+    }
+    template<class DT>
+    void ArrayGLL<DT>::setFirstFree(int pos){
     
-}
-template<class DT>
-void ArrayGLL<DT>::display(){// bonus
+    }
+    template<class DT>
+    void ArrayGLL<DT>::setFirstElement(int pos){
     
-}
-template<class DT>
-int ArrayGLL<DT>::find(DT& key){
-    return key;
-}
-template<class DT>
-int ArrayGLL<DT>::findDisplayPath(DT& key){
-    return key;
-}
-template<class DT>
-int ArrayGLL<DT>:: noFree(){
-    return 0;
-}
-template<class DT>
-int ArrayGLL<DT>::size(){
-    return 0;
-}
-template<class DT>
-int ArrayGLL<DT>::parentPos(DT& key){
-    return 0;
-}
-template<class DT>
-GLRow<DT>& ArrayGLL<DT>:: operator[](int pos){
-    
-}
-template<class DT>
-int ArrayGLL<DT>::getFirstFree(){
-    return 0;
-}
-template<class DT>
-int ArrayGLL<DT>::getFirstElement(){
-    return 0;
-}
-template<class DT>
-void ArrayGLL<DT>::setFirstFree(int pos){
-    
-}
-template<class DT>
-void ArrayGLL<DT>::setFirstElement(int pos){
-    
-}
-template <class DT>
-ArrayGLL<DT>::~ArrayGLL() {
-   
-}
+    }
+    template <class DT>
+    ArrayGLL<DT>::~ArrayGLL() {
+        delete[] myGLL;
+    }
 //end of arrayGLL
+
+class Exception{
+    
+};
+
+class ArrayBoundsException : Exception{
+  
+};
+
+class SegmentsException : Exception{
+    
+};
+
 
 int main() {
     
@@ -188,7 +229,8 @@ int main() {
     int pos = -1;
     int keyValues;
     int tempValue = 0;
-    GLRow<int> oneRow(0);// This is statically defined
+    int zero = 0;
+    GLRow<int> oneRow(zero);// This is statically defined
     
     //All variables must be defined
     
@@ -206,9 +248,12 @@ int main() {
     cout<<firstGLL<<endl;
     firstGLL.display();
     ArrayGLL<int>* secondGLL = new ArrayGLL<int>(firstGLL);
-
-    (*secondGLL[1]).setInfo(600);
-    (*secondGLL[2]).setInfo(700);
+    
+    int passByRef = 600;
+    int passByRef2 = 700;
+    (*secondGLL)[1].setInfo(passByRef);
+    (*secondGLL)[2].setInfo(passByRef2);
+    
     cout<<*secondGLL<<endl;
     (*secondGLL).display();
 
