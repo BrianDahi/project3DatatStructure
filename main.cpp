@@ -27,8 +27,8 @@ public:
     GLRow(DT& newInfo);
     GLRow(GLRow<DT>& anotherOne);//copy construtor?
     GLRow<DT> operator = (GLRow& anotherOne);// make a deep copy
-    int getNext();
-    int getDown();
+    int getNext();//This will get the next node if in same row
+    int getDown();//This will go down the tree
     DT& getInfo();
     void setNext(int n);
     void setDown(int d);
@@ -39,14 +39,14 @@ public:
 template<class DT>
 GLRow<DT>::GLRow(){
     info = NULL;
-    Next = 0;
-    Down = 0;
+    Next = -1;// -1 becauce 0 points to a spot in the array
+    Down = -1;
 }
 template<class DT>
 GLRow<DT>::GLRow(DT& newInfo){
     info = new DT(newInfo);
-    Next = 0;
-    Down = 0;
+    Next = -1;
+    Down = -1;
 }
 template<class DT>
 GLRow<DT>::GLRow(GLRow<DT>& copyGLRow){
@@ -56,7 +56,11 @@ GLRow<DT>::GLRow(GLRow<DT>& copyGLRow){
 }
 template<class DT>
 GLRow<DT> GLRow<DT>::operator =(GLRow& anotherOne){
-    
+   // this->anotherOne;
+    info = anotherOne.info;
+    Next = anotherOne.Next;
+    Down = anotherOne.Down;
+    return anotherOne;
 }
 template<class DT>
 int GLRow<DT>::getNext(){
@@ -68,7 +72,7 @@ int GLRow<DT>::getDown(){
 }
 template<class DT>
 DT& GLRow<DT>::getInfo(){
-    return info;
+    return (*info);
 }
 template<class DT>
 void GLRow<DT>::setNext(int n){
@@ -83,16 +87,18 @@ void GLRow<DT>::setDown(int d){
 template<class DT>
 void GLRow<DT>::setInfo(DT& x){
     info = &x;
-    
 }
 template <class DT>
 ostream& operator <<  (ostream& s,  GLRow<DT>& oneGLRow) {
-    s <<"not done yet in GLRow";
+    s<<"Down" <<oneGLRow.getDown()<<endl;
+    s<<"next"<< oneGLRow.getNext()<<endl;
+   // s<<"info"<<oneGLRow.getInfo()<<endl;
+   // s <<"not done yet in GLRow";
     return s;
 }
 template <class DT>
 GLRow<DT>::~GLRow() {
-   
+   // delete info;
 }
 
 //end of GLROW class
@@ -104,16 +110,18 @@ class ArrayGLL{//Array generalized linked list
 protected:
     GLRow<DT>* myGLL;// array created also be the address of the arry
     int maxSize;// max size of array
-    int firstElement;
-    int firstFree;
+    int firstElement;//first Node?
+    int firstFree;//Frist Free Node?
 public:
-    ArrayGLL();
-    ArrayGLL(int size);
-    ArrayGLL (ArrayGLL<DT>& anotherOne);
-    ArrayGLL<DT>& operator =(ArrayGLL<DT>& anotherOne);
+    ArrayGLL();//default
+    ArrayGLL(int size);//non-empty
+    ArrayGLL (ArrayGLL<DT>& anotherOne);//copy construtor
+    ArrayGLL<DT>& operator =(ArrayGLL<DT>& anotherOne);//Not sure!
+    
     void display();// bonus we need to display in parenthesis format
     int find(DT& key);/* return  the index position where you find the element key; return false if not found, use recursive search**/
-    int findDisplayPath(DT& Key);
+    
+    void findDisplayPath(DT& Key);
     int noFree();
     int size();
     int parentPos(DT& Key);//bonus
@@ -149,25 +157,60 @@ public:
 
     template<class DT>
     ArrayGLL<DT>& ArrayGLL<DT>::operator =(ArrayGLL<DT>& anotherOne){
-        this-> anotherOne;
+            maxSize = anotherOne.maxSize;
+            myGLL = anotherOne.myGLL;
+            firstElement = anotherOne.firstElement;
+            firstFree = anotherOne.firstFree;
     }
 
     template<class DT>
     void ArrayGLL<DT>::display(){// bonus
+        /*This will display in parenthesis format**/
     
     }
+
     template<class DT>
     int ArrayGLL<DT>::find(DT& key){
         /*This method will use recurison to find the key and return the index
          if not o found return -1**/
-        return key;
+        
+        if(myGLL[firstElement].getInfo() == key){
+            return firstElement;
+        }
+        /*I think I can traverse this way but I am confused on how I am going to back
+              track the tree.**/
+        if(myGLL[firstElement].getNext() == key){
+            return myGLL[firstElement].getNext();
+        }
+        else if(myGLL[firstElement].getDown() == key){
+            return myGLL[firstElement].getDown();
+        }
+           // find(myGLL[firstElement].getInfo().getNext());
+            //find(myGLL[firstElement].getInfo().getDown());
+        
+        
+       /*int i = firstElement;
+        while(myGLL[i].getNext() != -1 || myGLL[i].getDown() != -1){
+            if(myGLL[i].getInfo() == key){
+                return i;
+            }
+            if(myGLL[i].getNext() != -1){
+                i = myGLL[i].getNext();
+            }
+            
+        }*/
+        return -1;
     }
     template<class DT>
-    int ArrayGLL<DT>::findDisplayPath(DT& key){
-        return key;
+    void ArrayGLL<DT>::findDisplayPath(DT& key){
+       /*We will travel through the tree and print values we encounter
+        if value is print all values**/
+       
     }
     template<class DT>
     int ArrayGLL<DT>:: noFree(){
+        /*return number of free locations need to use the _Next or Next(my nameing)
+         and get the free locations**/
         int counter = 0;
        
         /*Think of this as a linked list so**/
@@ -175,17 +218,18 @@ public:
     }
     template<class DT>
     int ArrayGLL<DT>::size(){
-    
-        return maxSize;
+        //return number of elements stored
+        return 0;
     }
     template<class DT>
     int ArrayGLL<DT>::parentPos(DT& key){//bonus
+        /*This will return the node above the key ?**/
         return 0;
     }
     template<class DT>
     GLRow<DT>& ArrayGLL<DT>:: operator[](int pos){
         
-        if ((pos < 0) || (pos >= size()))
+        if ((pos < 0) || (pos >= maxSize))
             cout<< "Array is out of bounds"<<endl;
             
         return myGLL[pos];
@@ -193,19 +237,19 @@ public:
 
     template<class DT>
     int ArrayGLL<DT>::getFirstFree(){
-        return 0;
+        return firstFree;
     }
     template<class DT>
     int ArrayGLL<DT>::getFirstElement(){
-        return 0;
+        return firstElement;
     }
     template<class DT>
     void ArrayGLL<DT>::setFirstFree(int pos){
-    
+        firstFree = pos;
     }
     template<class DT>
     void ArrayGLL<DT>::setFirstElement(int pos){
-    
+        firstElement = pos;
     }
 template <class DT>
 ostream& operator <<  (ostream& s, ArrayGLL<DT>& OneGLL) {
@@ -218,17 +262,7 @@ ostream& operator <<  (ostream& s, ArrayGLL<DT>& OneGLL) {
     }
 //end of arrayGLL
 
-class Exception{
-    
-};
 
-class ArrayBoundsException : Exception{
-  
-};
-
-class SegmentsException : Exception{
-    
-};
 
 
 int main() {
@@ -250,9 +284,11 @@ int main() {
         oneRow.setInfo(value);
         oneRow.setNext(next);
         oneRow.setDown(down);
-        firstGLL[i];
+        firstGLL[i] = oneRow;
+        cout<<"\n"<<oneRow.getNext()<<endl;
+        cout<<firstGLL[i]<<"\n"<<endl;
     }
-    
+   /*
     firstGLL.setFirstFree(noElements);
     firstGLL.setFirstElement(0);
     cout<<firstGLL<<endl;
@@ -269,13 +305,18 @@ int main() {
 
     keyValues = 700;
     pos = (*secondGLL).find(keyValues);
+    if(pos != -1){
+        cout<< (*secondGLL)[pos]<<endl;
+        (*secondGLL).findDisplayPath(keyValues);
+    }
+    parentPos = (*secondGLL).parentPos(keyValues);
     if(parentPos != -1){
         cout<< (*secondGLL)[parentPos]<<endl;
     }
     cout<< (*secondGLL).size();
-    cout<< (*secondGLL).noFree();
+    cout<< (*secondGLL).noFree();*/
 
-    delete secondGLL;
+  //  delete secondGLL;
 
     return 0;
 }
