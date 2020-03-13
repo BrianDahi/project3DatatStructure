@@ -121,7 +121,7 @@ public:
     ArrayGLL<DT>& operator =(ArrayGLL<DT>& anotherOne);//Not sure!
     
     void display();// bonus we need to display in parenthesis format
-    int find(DT& key, int root);/* return  the index position where you find the element key; return false if not found, use recursive search**/
+    int find(DT& key);/* return  the index position where you find the element key; return false if not found, use recursive search**/
     
     void findDisplayPath(DT& Key);
     int noFree();
@@ -135,6 +135,7 @@ public:
     void setFirstElement(int pos);
     void nextOutput();
     int findIndex(DT& key, int root);
+    void printOrder(DT& key, int root);
    ~ArrayGLL();//destructor
 };
     template<class DT>
@@ -170,57 +171,90 @@ public:
 
     template<class DT>
     void ArrayGLL<DT>::display(){// bonus
-        /*This will display in parenthesis format**/
+        /*This will display in parenthesis format*
+         if parent has child open parenthesis if no more or no children close
+         parenthesis*/
+        
+        cout<<"parenthes format "<<endl;
     
     }
 
     template<class DT>
-    int ArrayGLL<DT>::find(DT& key,int root){
-        /*This method will use recurison to find the key and return the index
-         if not o found return -1*/
-    
-// int tempNext =  find(key,myGLL[root].getNext());
-          //   int tempDown = find(key,myGLL[root].getDown());
-        if(myGLL[root].getInfo() == key){
-                       return root;
-                   }
-        else{
-            find(key,myGLL[root].getDown());
-             find(key,myGLL[root].getNext());
-        }
-      /*  int tempNext = myGLL[root].getNext();
-        int tempDown = myGLL[root].getDown();
+    int ArrayGLL<DT>::find(DT& key){
         
-        if(myGLL[root].getInfo() == key){
-                return root;
-            }
-        if(tempDown != -1){
-            
-                   tempDown =  find(key,myGLL[root].getDown());
-               }
-        if(tempNext != -1){
-            tempNext =  find(key,myGLL[root].getNext());
-        }*/
-       
-        
-            return -1;
+        int index = findIndex(key,firstElement);
+        return index;
         
     }
-        
-    
-
     template<class DT>
     int ArrayGLL<DT>::findIndex(DT& key, int root){
+        //This checks for the obivous
         
-    
+        int count1,count2,count3,count4,count5 = 0;
+        if(myGLL[root].getInfo() == key){
+            cout<< "root " << root<<" counter :"<<count1++<<endl;
+            location = root;
+            return root;
+        }
+        
+        else if( (myGLL[root].getNext() != -1) && (myGLL[root].getDown() != -1 ) ){
+            findIndex( key, myGLL[root].getDown());
+            if( location == -1 ){
+                findIndex(key, myGLL[root].getNext());
+            }
+        }
+        
+        else if( ( myGLL[root].getNext() == -1) && (myGLL[root].getDown() == -1 ) ){
+            location = -1;
+            return -1;
+        }
+        
+        else if(myGLL[root].getNext() == -1){
+            findIndex(key, myGLL[root].getDown());
+        }
+        
+        else if(myGLL[root].getNext() != -1){
+                   findIndex(key, myGLL[root].getNext());
+        }
+        
+        else if(myGLL[root].getDown() == -1){
+                   findIndex(key, myGLL[root].getNext());
+        }
+        
+        else if(myGLL[root].getDown() != -1){
+                   findIndex(key, myGLL[root].getDown());
+        }
+            
+        return location;
     }
     template<class DT>
     void ArrayGLL<DT>::findDisplayPath(DT& key){
        /*We will travel through the tree and print values we encounter
         if value is print all values**/
+        printOrder(key, firstElement);
         
        
     }
+template<class DT>
+void ArrayGLL<DT>::printOrder(DT& key, int root){
+    //if(myGLL[root].getInfo() == NULL){
+      //  return;
+    //}
+    if(myGLL[root].getInfo()== key){
+        cout<<"finish"<<endl;
+        return;
+    }
+    //recur on left subTree
+    if(myGLL[root].getNext() != -1)
+    printOrder(key, myGLL[root].getNext());
+    //right
+    if(myGLL[root].getDown() != -1)
+    printOrder(key, myGLL[root].getDown());
+    
+    cout<<myGLL[root]<<endl;
+  
+}
+
     template<class DT>
     int ArrayGLL<DT>:: noFree(){
         /*return number of free locations need to use the _Next or Next(my nameing)
@@ -233,12 +267,7 @@ public:
     template<class DT>
     int ArrayGLL<DT>::size(){
         //return number of elements stored
-      /* int counter = 0;
-        for(int i = 0; i < maxSize;++i){
-            if(myGLL[i].getInfo() != 999 || myGLL[i].getInfo() != -1){
-                counter++;
-            }
-        }*/
+     
         return 0;
     }
     template<class DT>
@@ -301,34 +330,14 @@ int main() {
         oneRow.setDown(down);
         firstGLL[i] = oneRow;
        
-        cout<<firstGLL[i]<<"\n"<<endl;
+       // cout<<firstGLL[i]<<"\n"<<endl;
         
     }
    
-    keyValues = 75;
-      
-    firstGLL.setFirstFree(noElements);
-    firstGLL.setFirstElement(2);
-   
-    ArrayGLL<int>* secondGLL = new ArrayGLL<int>(firstGLL);
-    int passByRef = 600;
-    int passByRef2 = 700;
-
-  
-      (*secondGLL)[1].setInfo(passByRef);
-      (*secondGLL)[2].setInfo(passByRef2);
-  //  cout<<firstGLL.find(keyValues, firstGLL.getFirstElement())<<endl;;
-    cout<< (*secondGLL).find(keyValues,(*secondGLL).getFirstElement())<<endl;;
-    
-    
-    
-    
-    
-    /*
-     firstGLL.setFirstFree(noElements);
-        firstGLL.setFirstElement(0);
-        cout<<firstGLL<<endl;
-        firstGLL.display();
+     firstGLL.setFirstFree(noElements);// setter done
+        firstGLL.setFirstElement(2);// setter done
+        //cout<<firstGLL<<endl;//This is for ostream I think
+       // firstGLL.display();
         ArrayGLL<int>* secondGLL = new ArrayGLL<int>(firstGLL);
      
      int passByRef = 600;
@@ -336,23 +345,25 @@ int main() {
     (*secondGLL)[1].setInfo(passByRef);
     (*secondGLL)[2].setInfo(passByRef2);
     
-    cout<<*secondGLL<<endl;
-    (*secondGLL).display();
+   // cout<<*secondGLL<<endl;
+   // (*secondGLL).display();
 
-    keyValues = 700;
+    keyValues = 55;
     pos = (*secondGLL).find(keyValues);
     if(pos != -1){
-        cout<< (*secondGLL)[pos]<<endl;
+        cout<<(*secondGLL)[pos]<<endl;//is this only needing to return the index or everything in the
+        // array at that index
+        
         (*secondGLL).findDisplayPath(keyValues);
     }
-    parentPos = (*secondGLL).parentPos(keyValues);
-    if(parentPos != -1){
-        cout<< (*secondGLL)[parentPos]<<endl;
-    }
-    cout<< (*secondGLL).size();
-    cout<< (*secondGLL).noFree();
+    //parentPos = (*secondGLL).parentPos(keyValues);
+    //if(parentPos != -1){
+      //  cout<< (*secondGLL)[parentPos]<<endl;
+    //}
+    //cout<< (*secondGLL).size();
+    //cout<< (*secondGLL).noFree();
 
-    delete secondGLL;*/
+    //delete secondGLL;
 
     return 0;
 }
