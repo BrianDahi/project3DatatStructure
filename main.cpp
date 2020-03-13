@@ -113,7 +113,7 @@ protected:
     int maxSize;// max size of array
     int firstElement;//first Node?
     int firstFree;//Frist Free Node?
-    int location ;
+    int location = -1 ;
 public:
     ArrayGLL();//default
     ArrayGLL(int size);//non-empty
@@ -177,23 +177,37 @@ public:
     template<class DT>
     int ArrayGLL<DT>::find(DT& key,int root){
         /*This method will use recurison to find the key and return the index
-         if not o found return -1**/
+         if not o found return -1*/
+    
+// int tempNext =  find(key,myGLL[root].getNext());
+          //   int tempDown = find(key,myGLL[root].getDown());
+        if(myGLL[root].getInfo() == key){
+                       return root;
+                   }
+        else{
+            find(key,myGLL[root].getDown());
+             find(key,myGLL[root].getNext());
+        }
+      /*  int tempNext = myGLL[root].getNext();
+        int tempDown = myGLL[root].getDown();
         
         if(myGLL[root].getInfo() == key){
-                   return root;
-        }
-        else{
-            if(myGLL[root].getInfo() != -1){
-                if(myGLL[root].getNext() != -1){
-                    return find(key,myGLL[root++].getNext());
-                }
-                if(myGLL[root].getDown() != -1){
-                    return find(key,myGLL[root++].getDown());
-                }
+                return root;
             }
-        }
-      return -1;
+        if(tempDown != -1){
+            
+                   tempDown =  find(key,myGLL[root].getDown());
+               }
+        if(tempNext != -1){
+            tempNext =  find(key,myGLL[root].getNext());
+        }*/
+       
+        
+            return -1;
+        
     }
+        
+    
 
     template<class DT>
     int ArrayGLL<DT>::findIndex(DT& key, int root){
@@ -342,3 +356,35 @@ int main() {
 
     return 0;
 }
+
+
+
+/*if(myGLL[root].getInfo() == key){
+                  return root;
+       }
+       else{
+           if(myGLL[root].getInfo() != -1){
+               if(myGLL[root].getNext() != -1){
+                   return find(key,myGLL[root++].getNext());
+               }
+               if(myGLL[root].getDown() != -1){
+                   return find(key,myGLL[root++].getDown());
+               }
+           }
+       }*/
+
+
+/* if(myGLL[root].getInfo() == key){
+                       return root;
+            }
+            
+                if(myGLL[root].getInfo() != -1){
+                    if(myGLL[root].getNext() != -1){
+                        return find(key,myGLL[root].getNext());
+                    }
+                    if(myGLL[root].getDown() != -1){
+                        return find(key,myGLL[root].getDown());
+                    }
+                }
+     return -1;
+        }*/
