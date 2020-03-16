@@ -135,7 +135,8 @@ public:
     void setFirstElement(int pos);
     void nextOutput();
     int findIndex(DT& key, int root);
-    void printOrder(DT& key, int root);
+    void printOrder(DT& key);
+    bool print(DT& key, int root);
    ~ArrayGLL();//destructor
 };
     template<class DT>
@@ -216,36 +217,36 @@ public:
     void ArrayGLL<DT>::findDisplayPath(DT& key){
        /*We will travel through the tree and print values we encounter
         if value is print all values**/
-        printOrder(key, firstElement);
-        
-       
+        cout<<"This is the path to the key "<< endl;
+        print(key, firstElement);
     }
-template<class DT>
-void ArrayGLL<DT>::printOrder(DT& key, int root){
-    //if(myGLL[root].getInfo() == NULL){
-      //  return;
-    //}
-     if(myGLL[root].getInfo() == key){
-         cout<< "finish"<<endl;;
-               }
-   else{
-        int tempNext = findIndex(key, myGLL[root].getNext());
-        int tempDown = findIndex(key, myGLL[root].getDown());
-       
-        if( tempNext != -1){
-            cout<<root<<endl;
-            cout<<"finished in next"<<tempNext<<endl;//When doing the print also do a cout  and exit when key is //found
+
+    template<class DT>
+    bool ArrayGLL<DT>::print(DT& key, int root){
+        if(root == -1){
+              return -1;
         }
-        if(tempDown != -1){
-            cout<<root<<endl;
-            cout<<"finsied in down "<< tempDown<<endl;
+   
+        if(myGLL[root].getInfo() == key){
+            return true;
         }
-        else {
-            return;
+        else{
+            int tempNext = print(key, myGLL[root].getNext());
+            int tempDown = print(key, myGLL[root].getDown());
+     
+            if( tempNext != -1||tempDown != -1){
+                cout<<myGLL[root].getInfo()<<endl;
+                return true;//When doing the print also do a cout  and exit when key is found
+            }
+           // if(tempDown != -1){
+            //    cout<<"Down: " <<root<<endl;
+               // return true;
+           // }
+            else {
+                return false;
+            }
         }
     }
-  
-}
 
     template<class DT>
     int ArrayGLL<DT>:: noFree(){
@@ -341,7 +342,8 @@ int main() {
    // (*secondGLL).display();
 
     keyValues = 15;
-    pos =(*secondGLL).find(keyValues);
+    cout<<(*secondGLL).find(keyValues)<<endl;//Test for find
+    pos = (*secondGLL).find(keyValues);
     if(pos != -1){
        //cout<<(*secondGLL)[pos]<<endl;//is this only needing to return the index or everything in the
         (*secondGLL).findDisplayPath(keyValues);
