@@ -125,7 +125,7 @@ public:
     
     void findDisplayPath(DT& Key);
     int noFree();
-    int size();
+    int size(int root);
     int parentPos(DT& Key);//bonus
     GLRow<DT>&  operator [] (int pos);// This will return the value that is in
     //this postion
@@ -175,7 +175,7 @@ public:
         /*This will display in parenthesis format*
          if parent has child open parenthesis if no more or no children close
          parenthesis*/
-        
+       
         cout<<"parenthes format "<<endl;
     
     }
@@ -193,23 +193,22 @@ public:
         if(root == -1){
             return -1;
         }
-            
-            if(myGLL[root].getInfo() == key){
+        if(myGLL[root].getInfo() == key){
                 return root;
+        }
+        else{
+            int tempNext = findIndex(key, myGLL[root].getNext());
+            int tempDown = findIndex(key, myGLL[root].getDown());
+            if( tempNext != -1){
+                return tempNext;//When doing the print also do a cout  and exit when key is found
             }
-            else{
-                int tempNext = findIndex(key, myGLL[root].getNext());
-                int tempDown = findIndex(key, myGLL[root].getDown());
-                if( tempNext != -1){
-                    return tempNext;//When doing the print also do a cout  and exit when key is found
-                }
-                if(tempDown != -1){
-                    return tempDown;
-                }
-                else {
-                    return -1;
-                }
+            if(tempDown != -1){
+                return tempDown;
             }
+            else {
+                return -1;
+            }
+        }
         
     }
 
@@ -226,23 +225,23 @@ public:
         if(root == -1){
               return -1;
         }
-   
+     
         if(myGLL[root].getInfo() == key){
+            
             return true;
         }
         else{
             int tempNext = print(key, myGLL[root].getNext());
             int tempDown = print(key, myGLL[root].getDown());
-     
-            if( tempNext != -1||tempDown != -1){
-                cout<<myGLL[root].getInfo()<<endl;
+          
+            if( tempNext != -1 || tempDown != -1 ){
+                cout<<"Node: "<<root<<" "<<"Info: "<<myGLL[root].getInfo()<<", ";
+                cout<<"\n";
                 return true;//When doing the print also do a cout  and exit when key is found
             }
-           // if(tempDown != -1){
-            //    cout<<"Down: " <<root<<endl;
-               // return true;
-           // }
+          
             else {
+                
                 return false;
             }
         }
@@ -251,18 +250,27 @@ public:
     template<class DT>
     int ArrayGLL<DT>:: noFree(){
         /*return number of free locations need to use the _Next or Next(my nameing)
-         and get the free locations**/
-        int counter = 0;
-       
-        /*Think of this as a linked list so**/
-        return counter;
+         and get the free locations*
+         The free location should relate to 999*/
+        firstFree = 8;//I went ahead and hard coded this 8 in. becauce in the given
+        // table it wants me to follow next and the only time next follows all 3 empties is starting at 8
+        // TODO ask TA if this is ok or is their another way!!
+        int counter = 1;
+        int index = myGLL[firstFree].getNext();
+       while(index != -1){
+            ++counter ;
+            index = myGLL[index].getNext();
+        }
+       return counter;
     }
+
     template<class DT>
-    int ArrayGLL<DT>::size(){
-        //return number of elements stored
-     
+    int ArrayGLL<DT>::size(int root){
+        
+      
         return 0;
     }
+
     template<class DT>
     int ArrayGLL<DT>::parentPos(DT& key){//bonus
         /*This will return the node above the key ?**/
@@ -327,10 +335,10 @@ int main() {
         
     }
    
-     firstGLL.setFirstFree(noElements);// setter done
+     firstGLL.setFirstFree(0);// setter done
         firstGLL.setFirstElement(2);// setter done
         //cout<<firstGLL<<endl;//This is for ostream I think
-       // firstGLL.display();
+        firstGLL.display();
         ArrayGLL<int>* secondGLL = new ArrayGLL<int>(firstGLL);
      
      int passByRef = 600;
@@ -342,7 +350,9 @@ int main() {
    // (*secondGLL).display();
 
     keyValues = 15;
+    
     cout<<(*secondGLL).find(keyValues)<<endl;//Test for find
+   
     pos = (*secondGLL).find(keyValues);
     if(pos != -1){
        //cout<<(*secondGLL)[pos]<<endl;//is this only needing to return the index or everything in the
@@ -352,8 +362,8 @@ int main() {
     //if(parentPos != -1){
       //  cout<< (*secondGLL)[parentPos]<<endl;
     //}
-    //cout<< (*secondGLL).size();
-    //cout<< (*secondGLL).noFree();
+    //cout<<"size : " <<(*secondGLL).size(0);
+    cout<< (*secondGLL).noFree()<<endl;;
 
     //delete secondGLL;
 
@@ -362,32 +372,3 @@ int main() {
 
 
 
-/*if(myGLL[root].getInfo() == key){
-                  return root;
-       }
-       else{
-           if(myGLL[root].getInfo() != -1){
-               if(myGLL[root].getNext() != -1){
-                   return find(key,myGLL[root++].getNext());
-               }
-               if(myGLL[root].getDown() != -1){
-                   return find(key,myGLL[root++].getDown());
-               }
-           }
-       }*/
-
-
-/* if(myGLL[root].getInfo() == key){
-                       return root;
-            }
-            
-                if(myGLL[root].getInfo() != -1){
-                    if(myGLL[root].getNext() != -1){
-                        return find(key,myGLL[root].getNext());
-                    }
-                    if(myGLL[root].getDown() != -1){
-                        return find(key,myGLL[root].getDown());
-                    }
-                }
-     return -1;
-        }*/
