@@ -125,7 +125,7 @@ public:
     
     void findDisplayPath(DT& Key);
     int noFree();
-    int size(int root);
+    int  size(int root);
     int parentPos(DT& Key);//bonus
     GLRow<DT>&  operator [] (int pos);// This will return the value that is in
     //this postion
@@ -147,7 +147,7 @@ public:
     }
     template<class DT>
     ArrayGLL<DT>::ArrayGLL(int size){
-        myGLL = new GLRow<DT> [int(size)];
+        myGLL = new GLRow<DT> [size];
         maxSize = size;
         firstElement = 0;
         firstFree = 0;
@@ -200,7 +200,7 @@ public:
             int tempNext = findIndex(key, myGLL[root].getNext());
             int tempDown = findIndex(key, myGLL[root].getDown());
             if( tempNext != -1){
-                return tempNext;//When doing the print also do a cout  and exit when key is found
+                return tempNext;
             }
             if(tempDown != -1){
                 return tempDown;
@@ -252,7 +252,7 @@ public:
         /*return number of free locations need to use the _Next or Next(my nameing)
          and get the free locations*
          The free location should relate to 999*/
-        firstFree = 8;//I went ahead and hard coded this 8 in. becauce in the given
+       // firstFree = 8;//I went ahead and hard coded this 8 in. becauce in the given
         // table it wants me to follow next and the only time next follows all 3 empties is starting at 8
         // TODO ask TA if this is ok or is their another way!!
         int counter = 1;
@@ -266,11 +266,16 @@ public:
 
     template<class DT>
     int ArrayGLL<DT>::size(int root){
-        
-      
-        return 0;
+        if(root == -1){
+            return 0;
+        }
+      //if(myGLL[root].getInfo() == -1){
+        //  return 0;
+       //}
+       return 1 + size( myGLL[root].getNext()) +size(myGLL[root].getDown());
+       
     }
-
+    
     template<class DT>
     int ArrayGLL<DT>::parentPos(DT& key){//bonus
         /*This will return the node above the key ?**/
@@ -313,7 +318,8 @@ ostream& operator <<  (ostream& s, ArrayGLL<DT>& OneGLL) {
 int main() {
     
     cout<<"Hello"<<endl;
-    ArrayGLL<int> firstGLL(20);//I think this is the size of the list?
+    ArrayGLL<int> firstGLL(14);
+    
     int noElements,value,next,down,parentPos;
     int pos = -1;
     int keyValues;
@@ -335,7 +341,8 @@ int main() {
         
     }
    
-     firstGLL.setFirstFree(0);// setter done
+     firstGLL.setFirstFree(8);// I changed this to eight since it was the only way to reach all 3 empties
+    
         firstGLL.setFirstElement(2);// setter done
         //cout<<firstGLL<<endl;//This is for ostream I think
         firstGLL.display();
@@ -362,8 +369,9 @@ int main() {
     //if(parentPos != -1){
       //  cout<< (*secondGLL)[parentPos]<<endl;
     //}
-    //cout<<"size : " <<(*secondGLL).size(0);
-    cout<< (*secondGLL).noFree()<<endl;;
+   // (*secondGLL).size();
+    cout<<"size : " <<(*secondGLL).size(2)<< " ";
+    cout<<"Number of Free: " <<(*secondGLL).noFree()<<endl;;
 
     //delete secondGLL;
 
