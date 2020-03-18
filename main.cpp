@@ -373,7 +373,7 @@ int main() {
     cout<<"size : " <<(*secondGLL).size(2)<< " ";
     cout<<"Number of Free: " <<(*secondGLL).noFree()<<endl;;
 
-    //delete secondGLL;
+    delete secondGLL;
 
     return 0;
 }
