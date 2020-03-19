@@ -117,6 +117,7 @@ protected:
     int maxSize;// max size of array
     int firstElement;//first Node?
     int firstFree;//Frist Free Node?
+   
   
 public:
     ArrayGLL();//default
@@ -136,7 +137,7 @@ public:
     int  size(int root);
     
     int parentPos(DT& Key);//bonus
-    int findParentPositionIndex(DT& key, int root);
+    int findParentPositionIndex(DT& key, int root,int parentPos);
     
     GLRow<DT>&  operator [] (int pos);// This will return the value that is in
     //this postion
@@ -144,6 +145,8 @@ public:
     int getFirstElement();
     void setFirstFree(int pos);
     void setFirstElement(int pos);
+    int getParent();
+    void setParent(int pos);
     ~ArrayGLL();//destructor
 };
     template<class DT>
@@ -230,7 +233,7 @@ public:
     void ArrayGLL<DT>::findDisplayPath(DT& key){
        /*We will travel through the tree and print values we encounter
         if value is print all values**/
-        cout<<"This is the path to the key "<< endl;
+        cout<<"This is the path from the key "<< endl;
         print(key, firstElement);
         
     }
@@ -279,6 +282,8 @@ public:
         }
        return counter;
     }
+
+
     template<class DT>
     int ArrayGLL<DT>::size(int root){
         if(root == -1){
@@ -292,32 +297,27 @@ public:
 template<class DT>
     int ArrayGLL<DT>::parentPos(DT& key){
         int index = firstElement;
-       int parentIndex = findParentPositionIndex(key,index);
-              return parentIndex;
+      // int parentIndex = findParentPositionIndex(key,index, -1);
+              return findParentPositionIndex(key,index, -1);
     }
-template<class DT>
-int ArrayGLL<DT>::findParentPositionIndex(DT& key, int root){
-    
-    int parent ;
+    template<class DT>
+    int ArrayGLL<DT>::findParentPositionIndex(DT& key, int root, int parent){
     if(root == -1){
         return -1;
     }
-    if(myGLL[root].getInfo() != key){
-        parent = root;
-    }
+  
     if (myGLL[root].getInfo() == key) {
           return parent;
     }
     else{
-        
-            int tempNext = findParentPositionIndex(key, myGLL[root].getNext());
-            int tempDown = findParentPositionIndex(key, myGLL[root].getDown());
+            int tempNext = findParentPositionIndex(key, myGLL[root].getNext(), parent);
+            int tempDown = findParentPositionIndex(key, myGLL[root].getDown(), root);
          
            if( tempNext != -1){
                return tempNext;
             }
            if(tempDown != -1){
-               parent = root;
+              
                return tempDown;
             }
             else {
@@ -340,6 +340,7 @@ int ArrayGLL<DT>::findParentPositionIndex(DT& key, int root){
     int ArrayGLL<DT>::getFirstElement(){
         return firstElement;
     }
+
     template<class DT>
     void ArrayGLL<DT>::setFirstFree(int pos){
         firstFree = pos;
@@ -348,6 +349,7 @@ int ArrayGLL<DT>::findParentPositionIndex(DT& key, int root){
     void ArrayGLL<DT>::setFirstElement(int pos){
         firstElement = pos;
     }
+ 
 
 template <class DT>
 ostream& operator <<  (ostream& s, ArrayGLL<DT>& OneGLL) {
@@ -401,7 +403,7 @@ int main() {
     cout<<*secondGLL<<endl;// ostream
     (*secondGLL).display();// parenthese format
 
-    keyValues = 80;// I chose 15 which the index is 9
+    keyValues = 10;// I chose 15 which the index is 9
     
     cout<<"test for find:    "<<(*secondGLL).find(keyValues)<<endl;//Test for find will return the index of the key
    
@@ -412,8 +414,8 @@ int main() {
         (*secondGLL).findDisplayPath(keyValues);
         }
     
-  //  parentPos = (*secondGLL).parentPos(keyValues);
-    //cout<<"This is parent pos:   "<< parentPos<<endl;// my test
+    parentPos = (*secondGLL).parentPos(keyValues);
+    cout<<"This is parent pos:   "<< parentPos<<endl;// my test
     
     //if(parentPos != -1){
     //    cout<< (*secondGLL)[parentPos]<<endl;//This will do some of the same thing as the last if statment
