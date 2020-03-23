@@ -14,6 +14,9 @@ template<class DT>
 ostream& operator <<(ostream& s, ArrayGLL<DT>& OneGLL);
 
 //Start of GLROW class
+/* In class GLRow it will contain the infromation on each element such that it acts like an row
+  which countains info,next, and down. Also in this class we make a shallow copy and deep copy as well
+    Delete info. We also print out the row when index is called.*/
 template<class DT>
 class GLRow{
     friend ostream& operator << <DT>(ostream& s, GLRow<DT>& oneGLRow);
@@ -37,68 +40,62 @@ public:
     ~GLRow();//destructor
     
 };
-template<class DT>
-GLRow<DT>::GLRow(){
-    info = NULL;
-    Next = -1;// -1 becauce 0 points to a spot in the array
-    Down = -1;
-}
-template<class DT>
-GLRow<DT>::GLRow(DT& newInfo){
-    info = new DT(newInfo);
-    Next = -1;
-    Down = -1;
-}
-template<class DT>
-GLRow<DT>::GLRow(GLRow<DT>& copyGLRow){
-    info =  new DT (copyGLRow.getInfo());
-    Next = copyGLRow.Next;
-    Down = copyGLRow.Down;
-}
-template<class DT>
-GLRow<DT> GLRow<DT>::operator =(GLRow& anotherOne){
-   
-    info = new DT (anotherOne.getInfo());
-    Next = anotherOne.Next;
-    Down = anotherOne.Down;
-    return (*this);
-}
-template<class DT>
-int GLRow<DT>::getNext(){
-    return Next;
-}
-template<class DT>
-int GLRow<DT>::getDown(){
-    return Down;
-}
-template<class DT>
-DT& GLRow<DT>::getInfo(){
-    return *info;
-}
-template<class DT>
-void GLRow<DT>::setNext(int n){
-    Next = n;
-}
-template<class DT>
-void GLRow<DT>::setDown(int d){
-    Down = d;
-    
-}
-template<class DT>
-void GLRow<DT>::setInfo(DT& x){
-    info = new DT(x);
-}
-template <class DT>
-ostream& operator <<  (ostream& s,  GLRow<DT>& oneGLRow) {
-   
-   //Wasn't sure what to print so Decided to print the down, next and info
-    //The reasoning is to show what the row has at that index.
-    s<<"Down: " <<oneGLRow.getDown()<<endl;
-    s<<"next: "<< oneGLRow.getNext()<<endl;
-    s<<"info: " <<oneGLRow.getInfo()<<endl;
-    return s;
-}
-
+    template<class DT>
+    GLRow<DT>::GLRow(){
+        info = NULL;
+        Next = -1;// -1 becauce 0 points to a spot in the array
+        Down = -1;
+    }
+    template<class DT>
+    GLRow<DT>::GLRow(DT& newInfo){
+        info = new DT(newInfo);
+        Next = -1;
+        Down = -1;
+    }
+    template<class DT>
+    GLRow<DT>::GLRow(GLRow<DT>& copyGLRow){
+        info =  new DT (copyGLRow.getInfo());
+        Next = copyGLRow.Next;
+        Down = copyGLRow.Down;
+    }
+    template<class DT>
+    GLRow<DT> GLRow<DT>::operator =(GLRow& anotherOne){
+        info = new DT (anotherOne.getInfo());
+        Next = anotherOne.Next;
+        Down = anotherOne.Down;
+        return (*this);
+    }
+    template<class DT>
+    int GLRow<DT>::getNext(){
+        return Next;
+    }
+    template<class DT>
+    int GLRow<DT>::getDown(){
+        return Down;
+    }
+    template<class DT>
+    DT& GLRow<DT>::getInfo(){
+        return *info;
+    }
+    template<class DT>
+    void GLRow<DT>::setNext(int n){
+        Next = n;
+    }
+    template<class DT>
+    void GLRow<DT>::setDown(int d){
+        Down = d;
+    }
+    template<class DT>
+    void GLRow<DT>::setInfo(DT& x){
+        info = new DT(x);
+    }
+    template <class DT>
+    ostream& operator <<  (ostream& s,  GLRow<DT>& oneGLRow) {
+        s<<"Down: " <<oneGLRow.getDown()<<endl;
+        s<<"next: "<< oneGLRow.getNext()<<endl;
+        s<<"info: " <<oneGLRow.getInfo()<<endl;
+        return s;
+    }
     template <class DT>
     GLRow<DT>::~GLRow() {
         if(info != NULL){
@@ -109,6 +106,9 @@ ostream& operator <<  (ostream& s,  GLRow<DT>& oneGLRow) {
 //end of GLROW class
 
 // start of ArrayGLL
+/*In class ArrayGLL we will perform operation on an array that are similar to a linked list
+ each element in the array myGLL has an info, next, and down where next and down act as pointers
+to the next Index.**/
 template<class DT>
 class ArrayGLL{//Array generalized linked list
   friend ostream& operator << <DT>(ostream& s, ArrayGLL<DT>& OneGLL);
@@ -117,13 +117,13 @@ protected:
     int maxSize;// max size of array
     int firstElement;//first Node?
     int firstFree;//Frist Free Node?
-    DT* keyValue;
+    DT* keyValue;// I made this generic variable to take in the key value from main so I can print The methods in ostream
   
 public:
     ArrayGLL();//default
     ArrayGLL(int size);//non-empty
     ArrayGLL (ArrayGLL<DT>& anotherOne);//copy construtor
-    ArrayGLL<DT>& operator =(ArrayGLL<DT>& anotherOne);//Not sure!
+    ArrayGLL<DT>& operator =(ArrayGLL<DT>& anotherOne);
     
     void display();// bonus we need to display in parenthesis format
     int displayHelper( int root);
@@ -145,26 +145,25 @@ public:
     GLRow<DT>&  operator [] (int pos);// This will return the value that is in
     //this postion
     int getFirstFree();
-    int getFirstElement();
     void setFirstFree(int pos);
+    
+    int getFirstElement();
     void setFirstElement(int pos);
     
     DT& getKey();
     void setKey(DT& x);
-   
     
     ~ArrayGLL();//destructor
 };
     template<class DT>
     ArrayGLL<DT>::ArrayGLL(){//default constructor
         keyValue = NULL;
-        
         myGLL = NULL;
         firstElement = 0;
         firstFree = 0;
     }
     template<class DT>
-    ArrayGLL<DT>::ArrayGLL(int size){
+    ArrayGLL<DT>::ArrayGLL(int size){// non default
         keyValue = new DT();
         
         myGLL = new GLRow<DT> [size];
@@ -175,13 +174,11 @@ public:
     template<class DT>
     ArrayGLL<DT>::ArrayGLL (ArrayGLL<DT>& anotherOne){
         keyValue =  new DT ();
-        
         maxSize = anotherOne.maxSize;
         myGLL = new GLRow<DT>[maxSize];
-          for( int i = 0; i < maxSize; ++i){
+        for( int i = 0; i < maxSize; ++i){
               myGLL[i] = anotherOne.myGLL[i];
-          }
-        //myGLL = anotherOne.myGLL;
+        }
         firstElement = anotherOne.firstElement;
         firstFree = anotherOne.firstFree;
     }
@@ -189,14 +186,13 @@ public:
     template<class DT>
     ArrayGLL<DT>& ArrayGLL<DT>::operator =(ArrayGLL<DT>& anotherOne){
         keyValue =  new DT ();
-        
-            maxSize = anotherOne.maxSize;
-            myGLL = new GLRow<DT>[maxSize];// Maybe over write this
+        maxSize = anotherOne.maxSize;
+        myGLL = new GLRow<DT>[maxSize];// Maybe over write this
         for( int i = 0; i < maxSize; ++i){
             myGLL[i] = anotherOne.myGLL[i];
         }
-            firstElement = anotherOne.firstElement;
-            firstFree = anotherOne.firstFree;
+        firstElement = anotherOne.firstElement;
+        firstFree = anotherOne.firstFree;
         return (*this);
     }
 
@@ -208,7 +204,7 @@ public:
         // if down is true open parenthese
        // int info = myGLL[firstElement].getInfo();
         
-        cout<<"parenthes format "<<endl;
+        cout<<"parenthes format  Not done yet"<<endl;
         //cout<< "( ";
        // displayHelper(firstElement);
        // cout<< " )"<<endl;
@@ -248,7 +244,10 @@ public:
     }
 
 
-
+/*In the find method I return a call to its helper called finIndex. We are trying to return the node
+Where the key is located at. In findIndex we make two test cases either root == -1 or the info at that root is the key
+Both would be exit cases for the recurison. After the two if statments we enter an else where we keep track of the recurison by storeing
+it into an int . As exits cases fail and it eventually back track to test the other part of the tree. */
     template<class DT>
     int ArrayGLL<DT>::find(DT& key){
         
@@ -282,7 +281,10 @@ public:
     }
 
 
-
+/*For Find display path I also have a helper method . My helperMethod is named print. This method is similar to
+  findIndex except I need to print the path. By doing this the main thing is to print when it goes down the most straight path.
+  So we have our exit cases and instread of ints we use bools . The bool for down will print if true since it makes sense that you
+ wouldnt want to print everything in next. */
     template<class DT>
     void ArrayGLL<DT>::findDisplayPath(DT& key){
        /*We will travel through the tree and print values we encounter
@@ -324,9 +326,6 @@ public:
         /*return number of free locations need to use the _Next or Next(my nameing)
          and get the free locations*
          The free location should relate to 999*/
-       // firstFree = 8;//I went ahead and hard coded this 8 in. becauce in the given
-        // table it wants me to follow next and the only time next follows all 3 empties is starting at 8
-        // TODO ask TA if this is ok or is their another way!!
         int counter = 1;
         int index = myGLL[firstFree].getNext();
        while(index != -1){
@@ -336,7 +335,7 @@ public:
        return counter;
     }
 
-
+/*In size metho we use a helper and in the helper we have an exit case for root == -1*/
     template<class DT>
     int ArrayGLL<DT>::size(){
        
@@ -348,7 +347,7 @@ public:
         if(root == -1){
               return 0;
         }
-       return 1 + sizeHelper( myGLL[root].getNext()) +sizeHelper(myGLL[root].getDown());
+       return 1 + sizeHelper( myGLL[root].getNext()) + sizeHelper(myGLL[root].getDown());
     }
 
     template<class DT>
@@ -385,7 +384,7 @@ public:
 
     template<class DT>
     GLRow<DT>& ArrayGLL<DT>:: operator[](int pos){
-        //cout<<"Index: "<<pos<<endl;
+       
         return myGLL[pos];
     }
 
@@ -414,9 +413,24 @@ public:
     void ArrayGLL<DT>::setKey(DT& x){
         keyValue = new DT(x);
     }
+
     template <class DT>
     ostream& operator <<  (ostream& s, ArrayGLL<DT>& OneGLL) {
         DT temp = OneGLL.getKey();
+        s<<"These are the non-empty and where they can point to"<<endl;
+        for( int i = 0; i < OneGLL.size(); ++i){
+            if(OneGLL[i].getInfo() != 999){
+                s<<"Node: "<<i<<endl;
+                s<< OneGLL[i]<<endl;
+            }
+        }
+        s<<"These are the emptie nodes"<<endl;
+        for( int i = 0; i < OneGLL.maxSize; ++i){
+                  if(OneGLL[i].getInfo() == 999){
+                      s<<"Node: "<<i<<endl;
+                      s<< OneGLL[i]<<endl;
+                  }
+              }
         if( OneGLL.find(temp) == -1){
             s<<"Key does not Exit!"<<endl;
         }
@@ -481,6 +495,7 @@ int main() {
      (*secondGLL)[1].setInfo(passByRef);
      (*secondGLL)[2].setInfo(passByRef2);
     (*secondGLL).setKey(keyValues);
+    //cout<< "This is what's in the array: "<< (*secondGLL)<<endl;
     cout<<"This is the Ostream Operator for secondGLL: \n"<<(*secondGLL)<<endl;// ostream
     //(*secondGLL).display();// parenthese format
 
